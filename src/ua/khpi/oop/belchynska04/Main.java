@@ -39,13 +39,16 @@ class Find_string {
 	public StringBuilder str3;
 	public StringBuilder str4;
 	
+	int count_min = 0;
+	int count_max = 0;
+	
 	StringBuilder max_str[] = new StringBuilder[10];
 	StringBuilder min_str[] = new StringBuilder[10];
 	
 	final int quantity = 4;
 	public void print_group(){
 		
-		System.out.println("Strings whith length bigger than average");
+		System.out.println("Strings whith length bigger than average\n");
 		for(int i = 0; i < 4; i++) {
 			if(max_str[i] != null) {
 				System.out.println(max_str[i] + "; string length:" + max_str[i].length()  + "\n");
@@ -59,25 +62,36 @@ class Find_string {
 			}
 		}
 	}
-	public void find_group(StringBuilder str, int average_length, int pos_min, int pos_max, StringBuilder min_str[], StringBuilder max_str[]) {
+	
+	/**
+	 * Знайти до якої групи належить строка
+	 * @param str
+	 * @param average_length
+	 * @param min_str
+	 * @param max_str
+	 */
+	public void find_group(StringBuilder str, int average_length) {
 
 		if(str.length() < average_length) {
-			get_string( str, pos_min, min_str);
-		
+			get_string( str, count_min, min_str);
+			count_min++;
 		} 
 		else { 
-			get_string( str, pos_max, max_str);
-
+			get_string( str, count_max, max_str);
+			count_max++;
 		}
 		
 	}
 	
 	public StringBuilder[] get_string( StringBuilder str, int max_string_value, StringBuilder max_min_str[]) {
+		
 		max_min_str[max_string_value] = str;
+
 		return max_min_str;
 	}
-	public int average_length(int l1, int l2, int l3, int l4, int quantity) {
-		int average = (l1 + l2 + l3 + l4) / quantity;
+	
+	public int average_length() {
+		int average = (str1.length() + str2.length() + str3.length() + str4.length()) / quantity;
 		return average;
 	}
 	
@@ -96,11 +110,26 @@ class Find_string {
 		
 	}
 	
+	public void find_group_debug(StringBuilder str, int average_length) {
+		
+		if(str.length() < average_length) {
+			get_string( str, count_min, min_str);
+			count_min++;
+			System.out.println("Count of strings smaller than average length: " + count_min + ";\n\n");
+		} 
+		else { 
+			get_string( str, count_max, max_str);
+			count_max++;
+			System.out.println("Count of strings bigger than average length: " + count_max + ";\n\n");
+		}
+		
+	}
+	
 	/**
 	 * вивід на екран введених коритсувачем даних
 	 */
 	public void show_strings() {
-		System.out.println("You printed strings:\n" + str1 + "\n" + str2 + "\n" + str3 + "\n" + str4 + "\n");
+		System.out.println("You printed strings:\n" + str1 + "\n" + str2 + "\n" + str3 + "\n" + str4 + ";\n");
 	}
 }
 
@@ -133,21 +162,44 @@ class Menu{
 	        	menu();
 	            break;
 	        case "3":
-	        	int average = m.average_length(m.str1.length(), m.str2.length(), m.str3.length(), m.str4.length(), m.quantity);
-	        	m.find_group(m.str1, average, 0, 0, m.min_str, m.max_str);
-	    		m.find_group(m.str2, average, 1, 1, m.min_str, m.max_str);
-	    		m.find_group(m.str3, average, 2, 2, m.min_str, m.max_str);
-	    		m.find_group(m.str4, average, 3, 3, m.min_str, m.max_str);
+	        	int average = m.average_length();
+	        	m.find_group(m.str1, average);
+	    		m.find_group(m.str2, average);
+	    		m.find_group(m.str3, average);
+	    		m.find_group(m.str4, average);
 	    		m.print_group();
 	        	menu();
 	            break;
 	        case "4":  
 	            break;
 	        case "-d":
-	        	
+	        	average = m.average_length();
+	        	System.out.println("average_length = (" + m.str1.length() + " + " + m.str2.length() + " + " + m.str3.length() + " + " + m.str4.length() + ") / " + m.quantity +" = " + m.average_length() + "\n\n");
+	        	m.find_group_debug(m.str1, average);
+	    		m.find_group_debug(m.str2, average);
+	    		m.find_group_debug(m.str3, average);
+	    		m.find_group_debug(m.str4, average);
+	    		m.print_group();
+	    		menu();
 	        	break;
 	        	
+	        case "-debug":
+	        	average = m.average_length();
+	        	System.out.println("average_length = (" + m.str1.length() + " + " + m.str2.length() + " + " + m.str3.length() + " + " + m.str4.length() + ") / " + m.quantity +" = " + m.average_length() + "\n\n");
+	        	m.find_group_debug(m.str1, average);
+	    		m.find_group_debug(m.str2, average);
+	    		m.find_group_debug(m.str3, average);
+	    		m.find_group_debug(m.str4, average);
+	    		m.print_group();
+	    		menu();
+	        	break;
 	        case "-h":
+	        	System.out.println("Автор: Катерина Бельчинська\n\nІндивідуальне завдання: Ввести декілька рядків.\n"
+	        			+ "Розбити на дві групи: рядки, довжина яких менша за середню; рядки, довжина яких не менше середньої.\n"
+	        			+ "Вивести рядки та їх довжину по групах.\n\n" + "В ході виконання даної програми взаємодія з програмним забезпеченням виконується через меню та обрані користувачем команди.\n\n");
+	        	menu();
+	        	break;
+	        case "-help":
 	        	System.out.println("Автор: Катерина Бельчинська\n\nІндивідуальне завдання: Ввести декілька рядків.\n"
 	        			+ "Розбити на дві групи: рядки, довжина яких менша за середню; рядки, довжина яких не менше середньої.\n"
 	        			+ "Вивести рядки та їх довжину по групах.\n\n" + "В ході виконання даної програми взаємодія з програмним забезпеченням виконується через меню та обрані користувачем команди.\n\n");
